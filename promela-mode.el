@@ -3,6 +3,7 @@
 
 ;; Author: Eric Engstrom <eric.engstrom@honeywell.com>
 ;; Maintainer: Eric Engstrom
+;; Some patches by: Rudi Schlatte <rudi@constantly.at>
 ;; Keywords: spin, promela, tools
 
 ;; Copyright (C) 1998-2003  Eric Engstrom / Honeywell Laboratories
@@ -40,11 +41,12 @@
 ;;      default is fairly gaudy, so I can imagine that some folks would
 ;;      like a bit less.  FMI: see `font-lock-maximum-decoration'
 
-;; This mode is known to work under the following versions of emacs:
+;; This mode was known to work under the following versions of emacs:
 ;;   - XEmacs:        19.16, 20.x, 21.x
 ;;   - FSF/GNU Emacs: 19.34
 ;;   - NTEmacs (FSF): 20.[67]
-;; That is not to say there are no bugs specific to one of those versions :-)
+;; The current version was patched by rudi@constantly.at to work on GNU
+;; Emacs 24.  No known incompatibilities were introduced, but you never know ...
 
 ;; Please send any comments, bugs, patches or other requests to
 ;; Eric Engstrom at engstrom@htc.honeywell.com
@@ -343,7 +345,10 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 ;; "install" the font-lock-defaults based upon version of emacs we have
 (cond (promela-xemacsp
        (put 'promela-mode 'font-lock-defaults promela-font-lock-defaults))
-      ((not (assq 'promela-mode font-lock-defaults-alist))
+      ;; `font-lock-defaults-alist' was removed in Emacs 24 - for recent
+      ;; emacsen, we set `font-lock-defaults' in `promela-mode' instead
+      ((and (< emacs-major-version 24)
+            (not (assq 'promela-mode font-lock-defaults-alist)))
        (setq font-lock-defaults-alist
              (cons
               (cons 'promela-mode promela-font-lock-defaults)
@@ -392,35 +397,6 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 ;;     ("proctype"	"PROCTYPE" 	promela-check-expansion 0)
       )))
 
-(defvar promela-mode-map nil
-  "Keymap for promela-mode.")
-(if promela-mode-map
-    nil
-  (setq promela-mode-map (make-sparse-keymap))
-  (define-key promela-mode-map "\t"		'promela-indent-command)
-  (define-key promela-mode-map "\C-m"		'promela-newline-and-indent)
-  ;(define-key promela-mode-map 'backspace	'backward-delete-char-untabify)
-  (define-key promela-mode-map "\C-c\C-p"	'promela-beginning-of-block)
-  ;(define-key promela-mode-map "\C-c\C-n"	'promela-end-of-block)
-  (define-key promela-mode-map "\M-\C-a"	'promela-beginning-of-defun)
-  ;(define-key promela-mode-map "\M-\C-e"	'promela-end-of-defun)
-  (define-key promela-mode-map "\C-c("		'promela-toggle-auto-match-delimiter)
-  (define-key promela-mode-map "{"		'promela-open-delimiter)
-  (define-key promela-mode-map "}" 		'promela-close-delimiter)
-  (define-key promela-mode-map "("		'promela-open-delimiter)
-  (define-key promela-mode-map ")" 		'promela-close-delimiter)
-  (define-key promela-mode-map "["		'promela-open-delimiter)
-  (define-key promela-mode-map "]" 		'promela-close-delimiter)
-  (define-key promela-mode-map ";"		'promela-insert-and-indent)
-  (define-key promela-mode-map ":"		'promela-insert-and-indent)
-  ;; 
-  ;; this is preliminary at best - use at your own risk:
-  (define-key promela-mode-map "\C-c\C-s"	'promela-syntax-check)
-  ;;
-  ;;(define-key promela-mode-map "\C-c\C-d"	'promela-mode-toggle-debug)
-  ;;(define-key promela-mode-map "\C-c\C-r"	'promela-mode-revert-buffer)
-  )
-
 (defvar promela-matching-delimiter-alist
   '( (?(  . ?))
      (?[  . ?])
@@ -435,7 +411,7 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 ;; -------------------------------------------------------------------------
 ;; Promela-mode itself
 
-(defun promela-mode ()
+(define-derived-mode promela-mode fundamental-mode "Promela"
   "Major mode for editing PROMELA code.
 \\{promela-mode-map}
 
@@ -464,11 +440,10 @@ Variables controlling indentation style:
         quote, etc) should also insert the matching closing delmiter
         character.
 
-Turning on PROMELA mode calls the value of the variable promela-mode-hook with
-no args, if that value is non-nil.
+Turning on PROMELA mode runs the hooks in `promela-mode-hook'.
 
 For example: '
-	(setq promela-mode-hook '(lambda ()
+	(add-hook 'promela-mode-hook '(lambda ()
 			(setq promela-block-indent 2)
 			(setq promela-selection-indent 0)
 			(setq promela-selection-option-indent 2)
@@ -484,16 +459,32 @@ defines several \"levels\" of fontification or colorization.  The
 default is fairly gaudy, so if you would prefer a bit less, please see
 the documentation for the variable: `font-lock-maximum-decoration'.
 "
-  (interactive)
-  (kill-all-local-variables)
-  (setq mode-name  		"Promela")
-  (setq major-mode 		'promela-mode)
-  (use-local-map		promela-mode-map)
-  (set-syntax-table 		promela-mode-syntax-table)
+  :syntax-table promela-mode-syntax-table
+  (define-key promela-mode-map "\t"		'promela-indent-command)
+  (define-key promela-mode-map "\C-m"		'promela-newline-and-indent)
+  ;;(define-key promela-mode-map 'backspace	'backward-delete-char-untabify)
+  (define-key promela-mode-map "\C-c\C-p"	'promela-beginning-of-block)
+  ;;(define-key promela-mode-map "\C-c\C-n"	'promela-end-of-block)
+  (define-key promela-mode-map "\M-\C-a"	'promela-beginning-of-defun)
+  ;;(define-key promela-mode-map "\M-\C-e"	'promela-end-of-defun)
+  (define-key promela-mode-map "\C-c("		'promela-toggle-auto-match-delimiter)
+  (define-key promela-mode-map "{"		'promela-open-delimiter)
+  (define-key promela-mode-map "}" 		'promela-close-delimiter)
+  (define-key promela-mode-map "("		'promela-open-delimiter)
+  (define-key promela-mode-map ")" 		'promela-close-delimiter)
+  (define-key promela-mode-map "["		'promela-open-delimiter)
+  (define-key promela-mode-map "]" 		'promela-close-delimiter)
+  (define-key promela-mode-map ";"		'promela-insert-and-indent)
+  (define-key promela-mode-map ":"		'promela-insert-and-indent)
+  ;; 
+  ;; this is preliminary at best - use at your own risk:
+  (define-key promela-mode-map "\C-c\C-s"	'promela-syntax-check)
+  ;;
+  ;;(define-key promela-mode-map "\C-c\C-d"	'promela-mode-toggle-debug)
+  ;;(define-key promela-mode-map "\C-c\C-r"	'promela-mode-revert-buffer)
   (setq local-abbrev-table 	promela-mode-abbrev-table)
 
   ;; Make local variables
-  (make-local-variable 'case-fold-search)
   (make-local-variable 'paragraph-start)
   (make-local-variable 'paragraph-separate)
   (make-local-variable 'paragraph-ignore-fill-prefix)
@@ -502,9 +493,7 @@ the documentation for the variable: `font-lock-maximum-decoration'.
   (make-local-variable 'parse-sexp-ignore-comments)
   (make-local-variable 'comment-start)
   (make-local-variable 'comment-end)
-  (make-local-variable 'comment-column)
   (make-local-variable 'comment-start-skip)
-  (make-local-variable 'comment-indent-hook)
   (make-local-variable 'defun-prompt-regexp)
   (make-local-variable 'compile-command)
   ;; Now set their values
@@ -517,19 +506,12 @@ the documentation for the variable: `font-lock-maximum-decoration'.
         parse-sexp-ignore-comments 	t
         comment-start 			"/* "
         comment-end 			" */"
-        comment-column 			32
-        comment-start-skip 		"/\\*+ *"
-	;;comment-start-skip 		"/\\*+ *\\|// *"
-        ;;comment-indent-hook 		'promela-comment-indent
-        defun-prompt-regexp 		promela-defun-prompt-regexp
-        )
+        comment-column 			promela-comment-col
+        comment-start-skip 		"\\(//+\\|/\\*+\\)\\s *"
+        defun-prompt-regexp 		promela-defun-prompt-regexp)
 
   ;; Turn on font-lock mode
-  ;; (and promela-font-lock-mode (font-lock-mode))
-  (font-lock-mode)
-
-  ;; Finally, run the hooks and be done.
-  (run-hooks 'promela-mode-hook))
+  (setq font-lock-defaults '(promela-font-lock-defaults)))
 
 
 ;; -------------------------------------------------------------------------
@@ -597,22 +579,22 @@ indents the current line before running a regular newline-and-indent."
 (defun promela-insert-and-indent ()
   "Insert the last character typed and re-indent the current line"
   (interactive)
-  (insert last-command-char)
+  (insert last-command-event)
   (save-excursion (promela-indent-command)))
 
 (defun promela-open-delimiter ()
   "Inserts the open and matching close delimiters, indenting as appropriate."
   (interactive)
-  (insert last-command-char)
+  (insert last-command-event)
   (if (and promela-auto-match-delimiter (not (promela-inside-comment-p)))
       (save-excursion
-        (insert (cdr (assq last-command-char promela-matching-delimiter-alist)))
+        (insert (cdr (assq last-command-event promela-matching-delimiter-alist)))
         (promela-indent-command))))
 
 (defun promela-close-delimiter ()
   "Inserts and indents a close delimiter."
   (interactive)
-  (insert last-command-char)
+  (insert last-command-event)
   (if (not (promela-inside-comment-p))
       (save-excursion (promela-indent-command))))
 
@@ -948,7 +930,19 @@ Stop at limit or beginning of buffer."
 ;;----------------------------------------------------------------------
 ;; Change History:
 ;;
-;; $Log: promela-mode.el,v $
+;; 2014/03/20 rudi
+;;  - make the mode work on recent Emacs (tested on Emacs 24.3)
+;;    - removed references to font-lock-default-alist in emacs >=24
+;;    - renamed last-command-char (obsolete since Emacs 19.34) to
+;;      last-command-event
+;;  - use `define-derived-mode' (do not derive from `prog-mode' yet
+;;    since that is still too new)
+;;  - use value of `promela-comment-col'
+;;  - rely on newcomment to do comment indentation
+;;
+;;     migrated to git versioning...
+;; Pre-git-History:
+;;
 ;; Revision 1.11  2001/07/09 18:36:45  engstrom
 ;;  - added comments on use of font-lock-maximum-decoration
 ;;  - moved basic preprocess directive fontification to "level 2"
