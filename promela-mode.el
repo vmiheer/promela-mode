@@ -511,7 +511,7 @@ the documentation for the variable: `font-lock-maximum-decoration'.
         defun-prompt-regexp 		promela-defun-prompt-regexp)
 
   ;; Turn on font-lock mode
-  (setq font-lock-defaults '(promela-font-lock-defaults)))
+  (setq font-lock-defaults '(promela-font-lock-keywords)))
 
 
 ;; -------------------------------------------------------------------------
@@ -929,6 +929,8 @@ Stop at limit or beginning of buffer."
 
 ;;----------------------------------------------------------------------
 ;; Change History:
+;; 2014/05/22 rudi
+;;  - turn on font lock (tiny change)
 ;;
 ;; 2014/03/20 rudi
 ;;  - make the mode work on recent Emacs (tested on Emacs 24.3)
