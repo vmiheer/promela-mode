@@ -63,6 +63,10 @@
 ;;    [ at this point I'm not so sure about this change... EE: 2001/05/19 ] 
 
 ;;; -------------------------------------------------------------------------
+
+(require 'custom)
+(require 'newcomment)
+
 ;;; Code:
 
 ;; NOTE: same as CVS revision:
@@ -72,27 +76,47 @@
 ;; -------------------------------------------------------------------------
 ;; The following constant values can be modified by the user in a .emacs file
 
-(defconst promela-block-indent 2
-  "*Controls indentation of lines within a block (`{') construct")
+(defgroup promela nil
+  "Editing Promela files, the input language of the Spin model checker."
+  :group 'languages)
 
-(defconst promela-selection-indent 2
-  "*Controls indentation of options within a selection (`if')
-or iteration (`do') construct")
+(defcustom promela-block-indent 2
+  "Controls indentation of lines within a block (`{') construct"
+  :type 'integer
+  :group 'promela)
+(put 'promela-block-indent 'safe-local-variable 'integerp)
 
-(defconst promela-selection-option-indent 3
-  "*Controls indentation of lines after options within selection or
-iteration construct (`::')")
+(defcustom promela-selection-indent 2
+  "Controls indentation of options within a selection (`if')
+or iteration (`do') construct"
+  :type 'integer
+  :group 'promela)
+(put 'promela-selection-indent 'safe-local-variable 'integerp)
 
-(defconst promela-comment-col 32
-  "*Defines the desired comment column for comments to the right of text.")
+(defcustom promela-selection-option-indent 3
+  "Controls indentation of lines after options within selection or
+iteration construct (`::')"
+  :type 'integer
+  :group 'promela)
+(put 'promela-selection-option-indent 'safe-local-variable 'integerp)
 
-(defconst promela-tab-always-indent t
-  "*Non-nil means TAB in Promela mode should always reindent the current line,
-regardless of where in the line point is when the TAB command is used.")
+(defcustom promela-comment-col comment-column
+  "Defines the desired comment column for comments to the right of text."
+  :type 'integer
+  :group 'promela)
+(put 'promela-comment-col 'safe-local-variable 'integerp)
 
-(defconst promela-auto-match-delimiter t
-  "*Non-nil means typing an open-delimiter (i.e. parentheses, brace, quote, etc)
-should also insert the matching closing delmiter character.")
+(defcustom promela-tab-always-indent t
+  "Non-nil means TAB in Promela mode should always reindent the current line,
+regardless of where in the line point is when the TAB command is used."
+  :type 'boolean
+  :group 'promela)
+
+(defcustom promela-auto-match-delimiter t
+  "Non-nil means typing an open-delimiter (i.e. parentheses, brace, quote, etc)
+should also insert the matching closing delmiter character."
+  :type 'boolean
+  :group 'promela)
 
 ;; That should be about it for most users...
 ;; unless you wanna hack elisp, the rest of this is probably uninteresting
