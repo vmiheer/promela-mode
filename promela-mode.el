@@ -210,13 +210,13 @@ should also insert the matching closing delmiter character."
 ;;     both had promela-mode's that I discovered after starting this one...
 ;;     (but neither did any sort of indentation ;-)
 
-(defconst promela-font-lock-keywords-1 nil
+(defvar promela-font-lock-keywords-1 nil
   "Subdued level highlighting for Promela mode.")
 
-(defconst promela-font-lock-keywords-2 nil
+(defvar promela-font-lock-keywords-2 nil
   "Medium level highlighting for Promela mode.")
 
-(defconst promela-font-lock-keywords-3 nil
+(defvar promela-font-lock-keywords-3 nil
   "Gaudy level highlighting for Promela mode.")
 
 ;; set each of those three variables now..
@@ -325,7 +325,7 @@ should also insert the matching closing delmiter character."
     )))
   )
 
-(defvar promela-font-lock-keywords promela-font-lock-keywords-1
+(defvar promela-font-lock-keywords promela-font-lock-keywords-3
   "Default expressions to highlight in Promela mode.")
 
 ;; Font-lock matcher functions:
