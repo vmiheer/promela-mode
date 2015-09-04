@@ -1,4 +1,4 @@
-;; promela-mode.el --- major mode for editing PROMELA program files
+;;; promela-mode.el --- major mode for editing PROMELA program files
 ;; $Revision: 1.11 $ $Date: 2001/07/09 18:36:45 $ $Author: engstrom $
 
 ;; Author: Eric Engstrom <eric.engstrom@honeywell.com>
