@@ -46,7 +46,7 @@
 ;;   - FSF/GNU Emacs: 19.34
 ;;   - NTEmacs (FSF): 20.[67]
 ;; The current version was patched by rudi@constantly.at to work on GNU
-;; Emacs 24.  No known incompatibilities were introduced, but you never know ...
+;; Emacs 25.  No known incompatibilities were introduced, but you never know ...
 
 ;; Please send any comments, bugs, patches or other requests to
 ;; Eric Engstrom at engstrom@htc.honeywell.com
@@ -535,7 +535,7 @@ the documentation for the variable: `font-lock-maximum-decoration'.
         defun-prompt-regexp 		promela-defun-prompt-regexp)
 
   ;; Turn on font-lock mode
-  (setq font-lock-defaults '(promela-font-lock-keywords)))
+  (setq font-lock-defaults promela-font-lock-keywords))
 
 (dolist (extension '("\\.promela\\'" "\\.spin\\'" "\\.pml\\'"))
   (unless (assoc extension auto-mode-alist)
