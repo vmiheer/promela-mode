@@ -535,7 +535,7 @@ the documentation for the variable: `font-lock-maximum-decoration'.
         defun-prompt-regexp 		promela-defun-prompt-regexp)
 
   ;; Turn on font-lock mode
-  (setq font-lock-defaults promela-font-lock-keywords))
+  (setq font-lock-defaults promela-font-lock-defaults))
 
 (dolist (extension '("\\.promela\\'" "\\.spin\\'" "\\.pml\\'"))
   (unless (assoc extension auto-mode-alist)
