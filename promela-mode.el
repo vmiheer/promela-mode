@@ -48,6 +48,10 @@
 ;; The current version was patched by rudi@constantly.at to work on GNU
 ;; Emacs 25.  No known incompatibilities were introduced, but you never know ...
 
+;; §note: adapt to emacs 24. Retrocopmatibity have not being test, but
+;; according changes made, nothing might have been broken
+;;
+
 ;; Please send any comments, bugs, patches or other requests to
 ;; Eric Engstrom at engstrom@htc.honeywell.com
 
@@ -69,8 +73,8 @@
 
 ;;; Code:
 
-;; NOTE: same as CVS revision:
-(defconst promela-mode-version "$Revision: 1.11 $"
+;; NOTE: folowing 1.11 cvs version
+(defconst promela-mode-version "Revision: 1.111"
   "Promela-mode version number.")
 
 ;; -------------------------------------------------------------------------
@@ -364,7 +368,7 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
     nil						  ;; mods to syntax table (see below)
     nil						  ;; syntax-begin
     (font-lock-mark-block-function . mark-defun))
-)
+  )
 
 ;; "install" the font-lock-defaults based upon version of emacs we have
 (cond (promela-xemacsp
@@ -374,9 +378,9 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
       ((and (< emacs-major-version 24)
             (not (assq 'promela-mode font-lock-defaults-alist)))
        (setq font-lock-defaults-alist
-             (cons
-              (cons 'promela-mode promela-font-lock-defaults)
-              font-lock-defaults-alist))))
+	     (cons
+	      (cons 'promela-mode promela-font-lock-defaults)
+	      font-lock-defaults-alist))))
 
 
 ;; -------------------------------------------------------------------------
