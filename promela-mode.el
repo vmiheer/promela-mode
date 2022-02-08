@@ -437,8 +437,9 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 
 
 ;; -------------------------------------------------------------------------
+;;;###autoload (add-to-list 'auto-mode-alist '("\\.\\(promela\\|spin\\|pml\\)\\'" . promela-mode))
 ;; Promela-mode itself
-
+;;;###autoload
 (define-derived-mode promela-mode fundamental-mode "Promela"
   "Major mode for editing PROMELA code.
 \\{promela-mode-map}
