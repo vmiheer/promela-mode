@@ -437,8 +437,6 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 
 
 ;; -------------------------------------------------------------------------
-;;;###autoload (add-to-list 'auto-mode-alist '("\\.\\(promela\\|spin\\|pml\\)\\'" . promela-mode))
-;; Promela-mode itself
 ;;;###autoload
 (define-derived-mode promela-mode fundamental-mode "Promela"
   "Major mode for editing PROMELA code.
@@ -542,10 +540,12 @@ the documentation for the variable: `font-lock-maximum-decoration'.
   ;; Turn on font-lock mode
   (setq font-lock-defaults promela-font-lock-defaults))
 
-(dolist (extension '("\\.promela\\'" "\\.spin\\'" "\\.pml\\'"))
-  (unless (assoc extension auto-mode-alist)
-    (add-to-list 'auto-mode-alist (cons extension 'promela-mode))))
-
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.promela\\'" . promela-mode))
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.spin\\'" . promela-mode))
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.pml\\'" . promela-mode))
 
 
 ;; -------------------------------------------------------------------------
