@@ -1,10 +1,11 @@
 ;;; promela-mode.el --- major mode for editing PROMELA program files
-;; $Revision: 1.11 $ $Date: 2001/07/09 18:36:45 $ $Author: engstrom $
 
 ;; Author: Eric Engstrom <eric.engstrom@honeywell.com>
 ;; Maintainer: Eric Engstrom
+;; Package-Requires: ((emacs "25"))
+;; Version: 1.111
 ;; Some patches by: Rudi Schlatte <rudi@constantly.at>
-;; Keywords: spin, promela, tools
+;; Keywords: languages, spin, promela, tools
 
 ;; Copyright (C) 1998-2003  Eric Engstrom / Honeywell Laboratories
 
