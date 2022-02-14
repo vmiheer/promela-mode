@@ -439,7 +439,7 @@ If (match-beginning 2) is non-nil, the item is followed by a `value'."
 
 ;; -------------------------------------------------------------------------
 ;;;###autoload
-(define-derived-mode promela-mode fundamental-mode "Promela"
+(define-derived-mode promela-mode prog-mode "Promela"
   "Major mode for editing PROMELA code.
 \\{promela-mode-map}
 
